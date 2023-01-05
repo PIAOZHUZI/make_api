@@ -1,0 +1,17 @@
+{% for item in yaml.import %}
+{{item}}
+{% endfor %}
+
+{% macro make_db(yaml) %}
+SQLALCHEMY_DATABASE_URL = f"{{yaml.DB_HEAD}}://{{yaml.DB_USERNAME}}:{{yaml.DB_PASSWORD}}@{{yaml.DB_HOST}}:{{yaml.DB_PORT}}/{{yaml.DB_DATABASE}}"
+engine = create_engine(SQLALCHEMY_DATABASE_URL,  encoding="UTF-8", echo=True)
+session = scoped_session(sessionmaker(autocommit=False,autoflush=False,bind=engine))
+Base = declarative_base()
+def get_db():
+	db = session()
+	try:
+		yield db
+	finally:
+		db.close()
+{% endmacro %}
+{{make_db(yaml)}}

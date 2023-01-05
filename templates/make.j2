@@ -1,0 +1,18 @@
+{% for item in yaml.import %}
+{{item}}
+{% endfor %}
+{% macro makeApi(yaml) %}{% if yaml.main %}{{yaml.app}} = FastAPI()
+{% for item in yaml.main %}{{caller(item)}}{% endfor %}{%endif%}
+{% if yaml.route %}{% for item in yaml.route %}{{yaml.app}}.include_router({{item[1]}}.{{item[1]}}){% endfor %}
+{% endif %}
+{% endmacro %}
+{% call(yaml) makeApi(yaml) %}
+{% if (yaml.value)%}
+@{{yaml.value}}.{{yaml.name}}("{{yaml.path}}"{% if yaml.response_model != '' ,%}{{yaml.response_model}}{%endif%})
+def {{yaml.functionName}}({% if yaml.parameter != '' %}{{yaml.parameter}}{% endif %}):
+    {% if yaml.functionContent %}{{yaml.functionContent}}{%endif%}
+    return {{ yaml.returnValue }}
+{% endif %}
+{% endcall %}
+if __name__ == '__main__':
+    uvicorn.run({{yaml.app}}, port=9000)

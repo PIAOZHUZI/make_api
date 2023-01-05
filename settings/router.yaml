@@ -1,0 +1,46 @@
+import :
+  - import uvicorn
+  - from fastapi import Depends, FastAPI, Request, HTTPException, APIRouter
+  - from fastapi.responses import HTMLResponse
+  - from fastapi.templating import Jinja2Templates
+  - from starlette.responses import RedirectResponse
+  - from db import session
+  - from model import UserTable, User
+routes : route1
+route:
+  - 1 :
+    value : route1
+    path: /users
+    response_model : response_class=HTMLResponse
+    name : get
+    functionName : read_users
+    parameter : 'request: Request'
+    functionContent : >
+        context={}
+            users = session.query(UserTable).all()
+  
+            context["request"] = request
+            context["users"] = users
+    returnValue : templates.TemplateResponse("user_list.html", context)
+  - 2 :
+    value : route1
+    path : /user
+    name : delete
+    functionName : delete_users
+    parameter : 'user_id: int'
+    functionContent : >
+      user = session.query(UserTable).filter(UserTable.id == user_id).delete()
+          session.commit()
+    returnValue : read_users
+#  - 1:
+#    value: routes
+#    path: /sub_helloWorld # path
+#    name: get # path operation
+#    functionName: testfunc # function name
+#    returnValue: '"hello_world"' # return value
+#  - 2:
+#    value: routes
+#    path: /sub_helloWorld2 # path
+#    name: get # path operation
+#    functionName: testfunc2 # function name
+#    returnValue: '"hello_world"' # return value

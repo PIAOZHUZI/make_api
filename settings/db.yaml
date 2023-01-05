@@ -1,0 +1,15 @@
+import :
+ - from sqlalchemy import create_engine
+ - from sqlalchemy.ext.declarative import declarative_base
+ - from sqlalchemy.orm import sessionmaker, scoped_session
+
+DB_USERNAME : root
+DB_PASSWORD : Rhfoqkq101!
+DB_HOST : 127.0.0.1
+DB_PORT : 3306
+DB_DATABASE : project01
+DB_HEAD : 'mysql'
+
+#mysql+pymysql : mariadb를 지원하는 버전일 경우
+#mariadb+pymysql : mariadb만 지원하는 버전일 경우
+#posgresql :

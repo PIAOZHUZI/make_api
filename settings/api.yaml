@@ -1,0 +1,74 @@
+import :
+  - import uvicorn
+  - from fastapi import Depends, FastAPI, HTTPException, APIRouter
+  - from routes import route1
+  - from db import session
+  - from model import UserTable, User
+  - from typing import List
+
+app: app
+
+route:
+  - 1 : route1
+main :
+  - 1 :
+    value : app
+    path : /users
+    name : get
+    functionName : read_users
+    functionContent : users = session.query(UserTable).all()
+    returnValue : users
+  - 2:
+    value : app
+    path : /users/{user_id}
+    name : get
+    functionName : read_user
+    parameter : 'user_id: int'
+    functionContent : user = session.query(UserTable).filter(UserTable.id == user_id).first()
+    returnValue : user
+  - 3 :
+    value : app
+    path : /user
+    name : post
+    functionName : create_users
+    parameter : 'name: str, age: int'
+    functionContent : > 
+      user = UserTable()
+          user.name = name
+          user.age = age
+      
+          session.add(user)
+          session.commit()
+
+    returnValue : f"{name} created..."
+  - 4 :
+    value : app
+    path : /users
+    name: put
+    functionName: update_user
+    parameter: 'users: List[User]'
+    functionContent: > 
+        for i in users: 
+              user = session.query(UserTable).filter(UserTable.id == i.id).first()
+              user.name = i.name
+              user.age = i.age
+              session.commit()
+    returnValue : f"{users[0].name} updated..."
+
+
+#  - 1 :
+#    value : app
+#    path: /helloWorld
+#    name: get # path operation
+#    functionName: testfunc # function name
+#    returnValue: '"hello_world"' # return value
+#    response_model : ''
+#    parameter: ''
+#  - 2 :
+#    value : app
+#    path: /helloWorld2
+#    name: get # path operation
+#    functionName: testfunc2 # function name
+#    returnValue: '"hello_world"' # return value
+#    response_model: ''
+#    parameter: ''

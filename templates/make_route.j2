@@ -1,0 +1,14 @@
+{% for item in yaml.import %}
+{{item}}
+{% endfor %}
+{% macro makeApi(yaml) %}{% if yaml.routes %}{{yaml.routes}} = APIRouter()
+{% for item in yaml.route %}{{caller(item)}}{% endfor %}{% endif %}
+{% endmacro %}
+{% call(yaml) makeApi(yaml) %}
+{% if (yaml.value)%}
+@{{yaml.value}}.{{yaml.name}}("{{yaml.path}}"{% if yaml.response_model != '' %},{{yaml.response_model}}{%else%}{%endif%})
+def {{yaml.functionName}}({% if yaml.parameter != '' %} {{yaml.parameter}} {% endif %}):
+    {% if yaml.functionContent %}{{yaml.functionContent}}{%endif%}
+    return {{ yaml.returnValue }}
+{% endif %}
+{% endcall %}

@@ -1,0 +1,13 @@
+{% for item in yaml.import %}
+{{item}}
+{% endfor %}
+
+{% macro model(yaml) %}
+{% for item in yaml.tables %}
+class {{item.table}}(Base):
+  __tablename__ = "{{item.table.lower()}}"
+{% for key, value in item.model.items() %}  {{key}} = {{value}}
+{% endfor %}
+{% endfor %}
+{% endmacro %}
+{{model(yaml)}}
